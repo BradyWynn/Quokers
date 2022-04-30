@@ -1,0 +1,12 @@
+# Blender MTL File: 'moyai.blend'
+# Material Count: 1
+
+newmtl Default_OBJ
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.184820 0.143040 0.077376
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
