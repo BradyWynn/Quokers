@@ -1,0 +1,85 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using ExitGames.Client.Photon;
+using Photon.Realtime;
+using Photon.Pun;
+public class InformationSync : MonoBehaviour {
+    public List<string> playersCT = new List<string>();
+    public List<string> aliveCT = new List<string>();
+    public List<string> playersT = new List<string>();
+    public List<string> aliveT = new List<string>();
+    PhotonView view;
+    public void Start(){
+        view = GetComponent<PhotonView>();
+        if (PhotonNetwork.IsMasterClient == true)
+        {
+            gameObject.AddComponent<RoundLogic>();
+        }
+    }
+    private void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += OnJoinedRecieve;
+        PhotonNetwork.NetworkingClient.EventReceived += OnDeathRecieve;
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve;
+        PhotonNetwork.NetworkingClient.EventReceived += OnDeathRecieve;
+    }
+
+    private void OnJoinedRecieve(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        if (eventCode == 1) // <= don't delete
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            bool teambool = (bool)data[2];
+            string name = data[0].ToString();
+            int photonViewRecievedNumber = (int)data[1];
+            GameObject playername = GameObject.Find(name);
+            playername.name = name + photonViewRecievedNumber;
+
+            if(teambool == false)
+                playersT.Add(playername.name);
+            if(teambool == true)
+                playersCT.Add(playername.name);
+        }
+    }
+    private void OnDeathRecieve(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        if (eventCode == 2){ // <= don't delete
+
+            // processing obj list and adding to death lists
+            object[] data = (object[])photonEvent.CustomData;
+            string name = data[0].ToString();
+            bool team = (bool)data[1];
+
+            if(team == false)
+                aliveT.Add(name);
+            if(team == true)
+                aliveCT.Add(name);
+        }
+    }
+    [PunRPC]
+    private void networksync(){
+        playersCT = getplayersCT();
+        playersT = getplayersT();
+        aliveCT = getaliveCT();
+        aliveT = getaliveT();
+    }
+    public List<string> getplayersCT(){
+        return playersCT;
+    }
+    public List<string> getplayersT(){
+        return playersT;
+    }
+    public List<string> getaliveCT(){
+        return aliveCT;
+    }
+    public List<string> getaliveT(){
+        return aliveT;
+    }
+}

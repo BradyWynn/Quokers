@@ -1099,6 +1099,8 @@ MonoBehaviour:
   mouseY: 0
   cam: {fileID: 2929550138284982528}
   sens: 5
+  menu: {fileID: 0}
+  speed: {fileID: 0}
   collider: {fileID: 2929550137754777754}
 --- !u!114 &2879645606165939327
 MonoBehaviour:
@@ -1112,6 +1114,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f9f5ba0a6c528244b3e74e6fde0977a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 0
+  damage: 20
+  LineRenderer: {fileID: 0}
+  TransformOne: {fileID: 0}
+  TransformTwo: {fileID: 0}
+  inBetweenShots: 0
 --- !u!81 &2929550138284982529
 AudioListener:
   m_ObjectHideFlags: 0

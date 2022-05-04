@@ -982,6 +982,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 1626389060166696524}
+  GameManager: {fileID: 0}
+  infosyncref: {fileID: 0}
   movementscript: {fileID: 0}
   charactercontrol: {fileID: 0}
   spectatormove: {fileID: 0}

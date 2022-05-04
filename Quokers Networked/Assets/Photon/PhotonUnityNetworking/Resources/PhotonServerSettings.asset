@@ -39,6 +39,12 @@ MonoBehaviour:
   - DestroyRpc
   - settingsync
   - skinsync
+  - getplayersCT
+  - getplayersT
+  - RPC_getplayersCT
+  - RPC_getplayersT
+  - networksync
+  - skinsyncothers
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

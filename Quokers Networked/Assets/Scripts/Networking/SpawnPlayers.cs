@@ -15,8 +15,8 @@ public class SpawnPlayers : MonoBehaviour
     // public event SpawnDelegate spawnEvent;
     public void Awake() {
         view = GetComponent<PhotonView>();
-        if(PhotonNetwork.IsMasterClient == true)
-            Instantiate(roundlogicPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        // if(PhotonNetwork.IsMasterClient == true)
+        //     Instantiate(roundlogicPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         InstantiatePlayer();
     }
     public void InstantiatePlayer()
@@ -37,9 +37,12 @@ public class SpawnPlayers : MonoBehaviour
         //     instanobjCT = PhotonNetwork.Instantiate(tPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
 
         PhotonView view2 = instanobjCT.GetComponent<PhotonView>();
-        instanobjCT.name = instanobjCT.name + PhotonNetwork.CurrentRoom.PlayerCount;
-        string name = instanobjCT.name;
         int num = view2.ViewID;
+        // instanobjCT.name = instanobjCT.name + PhotonNetwork.CurrentRoom.PlayerCount;
+
+        // instanobjCT.name = instanobjCT.name + num + PhotonNetwork.CurrentRoom.PlayerCount;
+        string name = instanobjCT.name;
+
         // instanobj.name = PhotonNetwork.CurrentRoom.PlayerCount.ToString();
         // int name = (int)PhotonNetwork.CurrentRoom.PlayerCount;
         object[] content = new object[] { name, num, team }; // Array contains the target position and the IDs of the selected units

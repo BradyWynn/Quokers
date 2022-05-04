@@ -13,51 +13,56 @@ public class RoundLogic : MonoBehaviour
     // round ends when every player of a certain team is dead (does having multiple lists for teams make sense?)
     // spawn every player depending on team bool (probably predefine a range of positions and perform a random function inbetween)
     PhotonView view;
+    public List<string> playersCT = new List<string>();
+    public List<string> aliveCT = new List<string>();
+    public List<string> playersT = new List<string>();
+    public List<string> aliveT = new List<string>();
+    public InformationSync infosyncref;
     public void Start(){
         view = GetComponent<PhotonView>();
+        infosyncref = GetComponent<InformationSync>();
+        playersCT = infosyncref.getplayersCT();
+        playersT = infosyncref.getplayersT();
+        aliveCT = infosyncref.getaliveCT();
+        aliveT = infosyncref.getaliveT();
     }
-
-    public List<string> playersCT = new List<string>();
-    public List<bool> aliveCT = new List<bool>();
-    public List<string> playersT = new List<string>();
-    public List<bool> aliveT = new List<bool>();
     private void OnEnable()
     {
-        PhotonNetwork.NetworkingClient.EventReceived += OnJoinedRecieve;
+        // PhotonNetwork.NetworkingClient.EventReceived += OnJoinedRecieve;
         PhotonNetwork.NetworkingClient.EventReceived += OnDeathRecieve;
         // PhotonNetwork.NetworkingClient.EventReceived += SyncPlayersRecieve;
     }
 
     private void OnDisable()
     {
-        PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve;
+        // PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve;
         PhotonNetwork.NetworkingClient.EventReceived += OnDeathRecieve;
         // PhotonNetwork.NetworkingClient.EventReceived += SyncPlayersRecieve;
     }
 
-    private void OnJoinedRecieve(EventData photonEvent)
-    {
-        byte eventCode = photonEvent.Code;
-        if (eventCode == 1) // <= don't delete
-        {
-            object[] data = (object[])photonEvent.CustomData;
-            bool teambool = (bool)data[2];
-            string name = data[0].ToString();
-            int photonViewRecievedNumber = (int)data[1];
-            GameObject playername = GameObject.Find(name);
-            playername.name = name + photonViewRecievedNumber;
-            if(teambool == false)
-                playersT.Add(playername.name);
-            if(teambool == true)
-                playersCT.Add(playername.name);
+    // private void OnJoinedRecieve(EventData photonEvent)
+    // {
+    //     byte eventCode = photonEvent.Code;
+    //     if (eventCode == 1) // <= don't delete
+    //     {
+    //         object[] data = (object[])photonEvent.CustomData;
+    //         bool teambool = (bool)data[2];
+    //         string name = data[0].ToString();
+    //         int photonViewRecievedNumber = (int)data[1];
+    //         GameObject playername = GameObject.Find(name);
+    //         playername.name = name + photonViewRecievedNumber;
+    //         if(teambool == false)
+    //             playersT.Add(playername.name);
+    //         if(teambool == true)
+    //             playersCT.Add(playername.name);
 
-            //PhotonView photonViewRecieved = PhotonView.Find(photonViewRecievedNumber); 
+    //         //PhotonView photonViewRecieved = PhotonView.Find(photonViewRecievedNumber); 
 
-            // if(PhotonNetwork.IsMasterClient == true)
-            //     view.RPC("SyncPlayers", RpcTarget.All, playersCT, playersT);
-            // SyncPlayersSend();
-        }
-    }
+    //         // if(PhotonNetwork.IsMasterClient == true)
+    //         //     view.RPC("SyncPlayers", RpcTarget.All, playersCT, playersT);
+    //         // SyncPlayersSend();
+    //     }
+    // }
 
     private void OnDeathRecieve(EventData photonEvent)
     {
@@ -70,20 +75,27 @@ public class RoundLogic : MonoBehaviour
             string name = data[0].ToString();
             bool team = (bool)data[1];
 
-            if(team == false)
-                aliveT.Add(false);
-            if(team == true)
-                aliveCT.Add(false);
+            playersCT = infosyncref.getplayersCT();
+            playersT = infosyncref.getplayersT();
+            aliveCT = infosyncref.getaliveCT();
+            aliveT = infosyncref.getaliveT();
+
+            // if(team == false)
+            //     aliveT.Add(false);
+            // if(team == true)
+            //     aliveCT.Add(false);
 
             // checking if all players on one team are dead
             // if they are RoundStart event is called
-            if(playersCT.Count == aliveCT.Count){
-                Debug.Log(playersCT.Count + " " + aliveCT.Count);
-                RoundStart();
-            }
-            if(playersT.Count == aliveT.Count){
-                Debug.Log(playersT.Count + " " + aliveT.Count);
-                RoundStart();
+            // if(PhotonNetwork.IsMasterClient == true){ // this if statement is redundant since only master has RoundLogic(i think??)
+                if(playersCT.Count == aliveCT.Count){
+                    Debug.Log(playersCT.Count + " " + aliveCT.Count);
+                    RoundStart();
+                }
+                if(playersT.Count == aliveT.Count){
+                    Debug.Log(playersT.Count + " " + aliveT.Count);
+                    RoundStart();
+                // }
             }
         }
     }
@@ -103,6 +115,14 @@ public class RoundLogic : MonoBehaviour
         temp = GameObject.Find(oldName);
         temp.name = newName;
     }
+    // [PunRPC]
+    // private void RPC_getplayersCT(){
+    //     getplayersCT();
+    // }
+    // [PunRPC]
+    // private void RPC_getplayersT(){
+    //     getplayersT();
+    // }
 
     // private void SyncPlayersSend(){
     //     object[] content = new object[] { playersCT, playersT }; // Array contains the target position and the IDs of the selected units
