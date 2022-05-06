@@ -41,10 +41,25 @@ public class InformationSync : MonoBehaviour {
             GameObject playername = GameObject.Find(name);
             playername.name = name + photonViewRecievedNumber;
 
-            if(teambool == false)
+            if(teambool == false){
                 playersT.Add(playername.name);
-            if(teambool == true)
+            }
+            if(teambool == true){
                 playersCT.Add(playername.name);
+            }
+
+            // if(PhotonNetwork.IsMasterClient == true){
+            object[] objectArrayCT = new object[] {playersCT.Count};
+            object[] objectArrayT = new object[] {playersT.Count};
+
+            for (int i = 0; i < playersCT.Count; i++){
+                objectArrayCT[i] = playersCT[i];
+            }
+            for (int i = 0; i < playersT.Count; i++){
+                objectArrayT[i] = playersT[i];
+            }
+            view.RPC("networksync",  RpcTarget.All, objectArrayCT as object, objectArrayT as object);
+            // }
         }
     }
     private void OnDeathRecieve(EventData photonEvent)
@@ -64,11 +79,22 @@ public class InformationSync : MonoBehaviour {
         }
     }
     [PunRPC]
-    private void networksync(){
-        playersCT = getplayersCT();
-        playersT = getplayersT();
-        aliveCT = getaliveCT();
-        aliveT = getaliveT();
+    private void networksync(object[] ct, object[] t){
+        List<string> ctlist = new List<string>();
+        List<string> tlist = new List<string>();
+
+        foreach(var cosa in ct){
+            string thing = (string)cosa;
+            ctlist.Add(thing);
+        }
+        foreach(var cosa in t){
+            string thing = (string)cosa;
+            tlist.Add(thing);
+        }
+
+        playersCT = ctlist;
+        playersT = tlist;
+        Debug.Log("refriguator running");
     }
     public List<string> getplayersCT(){
         return playersCT;

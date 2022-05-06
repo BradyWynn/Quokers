@@ -23,6 +23,7 @@ public class PlayerInformation : MonoBehaviour
     public bool alive;
     public Material ctskin;
     public Material tskin;
+    bool ran = false;
     private void OnEnable()
     {
         PhotonNetwork.NetworkingClient.EventReceived += OnRoundStart;
@@ -52,7 +53,7 @@ public class PlayerInformation : MonoBehaviour
         if(health == 0 && view.IsMine){
             health = 100;
             OnDeathSend();
-            view.RPC("settingsync", RpcTarget.All);
+            view.RPC("componentsync", RpcTarget.All);
             // charactercontrol.enabled = false;
         }
     }
@@ -94,31 +95,43 @@ public class PlayerInformation : MonoBehaviour
         // spectatormove.enabled = false;
         // mesh.enabled = true;
     }
-    private void OnJoinedRecieve(EventData photonEvent)
+    private void OnJoinedRecieve(EventData photonEvent) // method that only runs once when this local player joins the game
     {
         byte eventCode = photonEvent.Code;
+        string parentname = transform.parent.name;
         if (eventCode == 1) // <= don't delete (had a check for PhotonNetwork.IsMasterClient for some reason)
         {
-            object[] data = (object[])photonEvent.CustomData;
-            side = (bool)data[2];
-
-            // GameObject capsule = playername.transform.Find("Capsule").gameObject;
-            // PhotonView photonViewRecieved = capsule.GetComponent<PhotonView>();
-
-            if(view.IsMine){ // this code essentially makes it so that it only runs on the local client
-                view.RPC("skinsyncothers",  RpcTarget.All, side);
+            if(view.IsMine){
+                view.RPC("namesync",  RpcTarget.All, parentname);
             }
-            skinsynclocal();
+            if(!ran){
+                ran = true;
+                object[] data = (object[])photonEvent.CustomData;
+                side = (bool)data[2];
+                name = (string)data[0];
+
+                // GameObject capsule = playername.transform.Find("Capsule").gameObject;
+                // PhotonView photonViewRecieved = capsule.GetComponent<PhotonView>();
+
+                if(view.IsMine){ // this code essentially makes it so that it only runs on the local client
+                    view.RPC("skinsyncothers",  RpcTarget.All, side);
+                    if (PhotonNetwork.IsMasterClient == false){
+                        skinsynclocal();
+                    }
+                }
+            }
+        }
+            
+            
 
             // if(view.IsMine){
             //     setotherplayersteamcolors();
             // }
 
-            PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve; // removes us from the OnJoinedRecieve event so if someone else joins we don't run this code again
-        }
+            // PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve; // removes us from the OnJoinedRecieve event so if someone else joins we don't run this code again
     }
     [PunRPC]
-    private void settingsync(){
+    private void componentsync(){
         movementscript.enabled = false; 
         spectatormove.enabled = true;
         mesh.enabled = false;
@@ -138,22 +151,36 @@ public class PlayerInformation : MonoBehaviour
     }
     public void skinsynclocal(){
         List<string> playersCT = infosyncref.getplayersCT();
+        // Debug.Log(playersCT[1]);
         List<string> playersT = infosyncref.getplayersT();
+        // Debug.Log(playersT[1]);
+
 
         foreach(var player in playersCT){
-            string name = player;
+            string name = (string)player;
             GameObject playerobject = GameObject.Find(name);
-            GameObject capsuletwopointo = playerobject.transform.Find("GameObject").gameObject;
-            Renderer Objectrenderer = capsuletwopointo.GetComponent<Renderer>();
+            // GameObject capsulegameobject = playerobject.transform.transform.Find("GameObject");
+            GameObject capsulegameobject = playerobject.transform.GetChild(0).GetChild(1).gameObject;
+            Debug.Log(capsulegameobject);
+            Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
             Objectrenderer.material = ctskin;
         }
         foreach(var player in playersT){
-            string name = player;
+            string name = (string)player;
             GameObject playerobject = GameObject.Find(name);
-            GameObject capsuletwopointo = playerobject.transform.Find("GameObject").gameObject;
-            Renderer Objectrenderer = capsuletwopointo.GetComponent<Renderer>();
+            // GameObject capsulegameobject = playerobject.transform.transform.Find("GameObject").gameObject;
+            GameObject capsulegameobject = playerobject.transform.GetChild(0).GetChild(1).gameObject;
+            Debug.Log(capsulegameobject);
+            Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
             Objectrenderer.material = tskin;
-        }
+        } // pretty sure this code is working but needs more testing
+    } // one problem is that names are not synced across clients and so if it looks for the master client on another client then
+    // it will not find it and then throw an error and the skin will not be updated
+
+    [PunRPC]
+    private void namesync(string name){ // need a better general solution for syncing variables instead of individual methods????
+        transform.parent.name = name;
+        Debug.Log(name);
     }
     // public void setotherplayersteamcolors(){
     //     view.RPC("RPC_getplayersCT",  RpcTarget.All, view);
