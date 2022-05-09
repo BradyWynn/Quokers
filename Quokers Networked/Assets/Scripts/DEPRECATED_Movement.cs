@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class Movement : MonoBehaviour
+public class DEPRECATED_Movement : MonoBehaviour
 {
     // <<THIS IS LEGACY CODE NOT USED IN THE CURRENT BUILD>>
     public Vector3 accelerationX;

@@ -109,10 +109,10 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    public void setName(){
-        if(view.IsMine){
-            name = nameInput.text;
-            master.settingthedesriednameoftheplayer(name, transform.parent.parent.parent.name);
-        }
-    }
+    // public void setName(){
+    //     if(view.IsMine){
+    //         name = nameInput.text;
+    //         master.settingthedesriednameoftheplayer(name, transform.parent.parent.parent.name);
+    //     }
+    // }
 }

@@ -11,7 +11,7 @@ public class PlayerInformation : MonoBehaviour
     public GameObject GameManager;
     public InformationSync infosyncref;
     public CharacterControllerr movementscript;
-    public CharacterController charactercontrol;
+    // public CharacterController charactercontrol;
     public SpectatorController spectatormove;
     public DebugWeapon weaponscript;
     public GameObject camera;
@@ -29,14 +29,14 @@ public class PlayerInformation : MonoBehaviour
         PhotonNetwork.NetworkingClient.EventReceived += OnRoundStart;
         PhotonNetwork.NetworkingClient.EventReceived += OnJoinedRecieve;
     }
-    private void OnDisable()
-    {
-        PhotonNetwork.NetworkingClient.EventReceived -= OnRoundStart;
-        PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve;
-    }
+    // private void OnDisable()
+    // {
+    //     PhotonNetwork.NetworkingClient.EventReceived -= OnRoundStart;
+    //     PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve;
+    // }
     private void Start() {
         view = GetComponent<PhotonView>();
-        charactercontrol = GetComponent<CharacterController>();
+        // charactercontrol = GetComponent<CharacterController>();
         movementscript = GetComponent<CharacterControllerr>();
         spectatormove = GetComponent<SpectatorController>();
         mesh = mayoichild.GetComponent<MeshRenderer>();
@@ -84,10 +84,10 @@ public class PlayerInformation : MonoBehaviour
         weaponscript.enabled = true;
             if(side == true)
                 transform.position = new Vector3(-1.2f, 8.3f, -39.9f); // change to delete/instaniate player instead of teleport
-                Debug.Log("-1.2f, 8.3f, -39.9f");
+                // Debug.Log("-1.2f, 8.3f, -39.9f");
             if(side == false)
                 transform.position = new Vector3(21.2f, 8.3f, 37.6f); // change to delete/instaniate player instead of teleport
-                Debug.Log("21.2f, 8.3f, 37.6f");
+                // Debug.Log("21.2f, 8.3f, 37.6f");
         }
 
         // what happens to the player
@@ -104,22 +104,24 @@ public class PlayerInformation : MonoBehaviour
             if(view.IsMine){
                 view.RPC("namesync",  RpcTarget.All, parentname);
             }
-            if(!ran){
-                ran = true;
-                object[] data = (object[])photonEvent.CustomData;
-                side = (bool)data[2];
-                name = (string)data[0];
+            // if(!ran){ //  everything inside here runs once
+            //     ran = true;
+            //     object[] data = (object[])photonEvent.CustomData;
+            //     side = (bool)data[2];
+            //     name = (string)data[0];
 
-                // GameObject capsule = playername.transform.Find("Capsule").gameObject;
-                // PhotonView photonViewRecieved = capsule.GetComponent<PhotonView>();
+            //     // GameObject capsule = playername.transform.Find("Capsule").gameObject;
+            //     // PhotonView photonViewRecieved = capsule.GetComponent<PhotonView>();
 
-                if(view.IsMine){ // this code essentially makes it so that it only runs on the local client
-                    view.RPC("skinsyncothers",  RpcTarget.All, side);
-                    if (PhotonNetwork.IsMasterClient == false){
-                        skinsynclocal();
-                    }
-                }
-            }
+            //     // if(view.IsMine){ // this code essentially makes it so that it only runs on the local client
+            //     //     if (PhotonNetwork.IsMasterClient == false){
+            //     //         skinsynclocal();
+            //     //     }
+            //     // }
+            // }
+            // if(view.IsMine){
+            //     view.RPC("skinsyncothers",  RpcTarget.All, side);
+            // }
         }
             
             
@@ -141,7 +143,7 @@ public class PlayerInformation : MonoBehaviour
     private void skinsyncothers(bool side){
         GameObject capsuletwopointo = transform.Find("GameObject").gameObject;
         Renderer Object = capsuletwopointo.GetComponent<Renderer>();
-        Debug.Log("a player has joined!");
+        // Debug.Log("a player has joined!");
         if(side == false){
             Object.material = ctskin;
         }
@@ -161,7 +163,7 @@ public class PlayerInformation : MonoBehaviour
             GameObject playerobject = GameObject.Find(name);
             // GameObject capsulegameobject = playerobject.transform.transform.Find("GameObject");
             GameObject capsulegameobject = playerobject.transform.GetChild(0).GetChild(1).gameObject;
-            Debug.Log(capsulegameobject);
+            // Debug.Log(capsulegameobject);
             Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
             Objectrenderer.material = ctskin;
         }
@@ -170,7 +172,7 @@ public class PlayerInformation : MonoBehaviour
             GameObject playerobject = GameObject.Find(name);
             // GameObject capsulegameobject = playerobject.transform.transform.Find("GameObject").gameObject;
             GameObject capsulegameobject = playerobject.transform.GetChild(0).GetChild(1).gameObject;
-            Debug.Log(capsulegameobject);
+            // Debug.Log(capsulegameobject);
             Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
             Objectrenderer.material = tskin;
         } // pretty sure this code is working but needs more testing
@@ -180,7 +182,7 @@ public class PlayerInformation : MonoBehaviour
     [PunRPC]
     private void namesync(string name){ // need a better general solution for syncing variables instead of individual methods????
         transform.parent.name = name;
-        Debug.Log(name);
+        // Debug.Log(name);
     }
     // public void setotherplayersteamcolors(){
     //     view.RPC("RPC_getplayersCT",  RpcTarget.All, view);

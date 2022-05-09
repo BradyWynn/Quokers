@@ -49,16 +49,16 @@ public class InformationSync : MonoBehaviour {
             }
 
             // if(PhotonNetwork.IsMasterClient == true){
-            object[] objectArrayCT = new object[] {playersCT.Count};
-            object[] objectArrayT = new object[] {playersT.Count};
+            //     object[] objectArrayCT = new object[] {playersCT.Count};
+            //     object[] objectArrayT = new object[] {playersT.Count};
 
-            for (int i = 0; i < playersCT.Count; i++){
-                objectArrayCT[i] = playersCT[i];
-            }
-            for (int i = 0; i < playersT.Count; i++){
-                objectArrayT[i] = playersT[i];
-            }
-            view.RPC("networksync",  RpcTarget.All, objectArrayCT as object, objectArrayT as object);
+            //     for (int i = 0; i < playersCT.Count; i++){
+            //         objectArrayCT[i] = playersCT[i];
+            //     }
+            //     for (int i = 0; i < playersT.Count; i++){
+            //         objectArrayT[i] = playersT[i];
+            //     }
+            //     view.RPC("networksync",  RpcTarget.All, objectArrayCT as object, objectArrayT as object);
             // }
         }
     }
@@ -94,7 +94,7 @@ public class InformationSync : MonoBehaviour {
 
         playersCT = ctlist;
         playersT = tlist;
-        Debug.Log("refriguator running");
+        // Debug.Log("refriguator running");
     }
     public List<string> getplayersCT(){
         return playersCT;

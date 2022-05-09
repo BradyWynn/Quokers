@@ -982,6 +982,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 1626389060166696524}
+  GameManager: {fileID: 0}
+  infosyncref: {fileID: 0}
   movementscript: {fileID: 0}
   charactercontrol: {fileID: 0}
   spectatormove: {fileID: 0}
@@ -993,7 +995,8 @@ MonoBehaviour:
   UI: {fileID: 1421835078353948070}
   side: 0
   alive: 0
-  alreadyran: 1
+  ctskin: {fileID: 0}
+  tskin: {fileID: 0}
 --- !u!114 &1859694655770435068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5179,7 +5182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1242361019582331703
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5652,7 +5655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1166659253013485687
 RectTransform:
   m_ObjectHideFlags: 0

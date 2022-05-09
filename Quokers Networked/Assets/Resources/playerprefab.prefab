@@ -874,6 +874,7 @@ GameObject:
   - component: {fileID: 1859694655770435042}
   - component: {fileID: 5769014492327609355}
   - component: {fileID: 1859694655770435068}
+  - component: {fileID: 5243359595665236792}
   - component: {fileID: 814247456375443329}
   - component: {fileID: 2138041101690000748}
   - component: {fileID: 1626389060166696524}
@@ -976,7 +977,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1859694655770435071}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23a75ac7b07704140865bfd3e087c37d, type: 3}
   m_Name: 
@@ -985,7 +986,6 @@ MonoBehaviour:
   GameManager: {fileID: 0}
   infosyncref: {fileID: 0}
   movementscript: {fileID: 0}
-  charactercontrol: {fileID: 0}
   spectatormove: {fileID: 0}
   weaponscript: {fileID: 0}
   camera: {fileID: 2959915168080152499}
@@ -1032,8 +1032,27 @@ MonoBehaviour:
   MAX_ACCEL: 5
   MAX_AIR_SPEED: 2
   MAX_AIR_ACCEL: 0.5
+  active: 1
   isGrounded: 0
   isWalled: 0
+--- !u!114 &5243359595665236792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859694655770435071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5babd3c895efc4cae811981c67d0b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 0}
+  UI: {fileID: 1421835078353948070}
+  name: 
+  team: 0
+  health: 0
+  alive: 0
 --- !u!114 &814247456375443329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1041,7 +1060,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1859694655770435071}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66a300559b931b3468dc71099546d100, type: 3}
   m_Name: 
@@ -1055,6 +1074,7 @@ MonoBehaviour:
   groundfric: 1
   wallfric: 1
   MAX_AIR_ACCEL: 0.5
+  active: 0
 --- !u!114 &2138041101690000748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2200,6 +2220,7 @@ MonoBehaviour:
   TransformOne: {fileID: 0}
   TransformTwo: {fileID: 0}
   inBetweenShots: 0
+  active: 0
 --- !u!81 &6077293212266671704
 AudioListener:
   m_ObjectHideFlags: 0

@@ -13,18 +13,18 @@ public class RoundLogic : MonoBehaviour
     // round ends when every player of a certain team is dead (does having multiple lists for teams make sense?)
     // spawn every player depending on team bool (probably predefine a range of positions and perform a random function inbetween)
     PhotonView view;
-    public List<string> playersCT = new List<string>();
-    public List<string> aliveCT = new List<string>();
-    public List<string> playersT = new List<string>();
-    public List<string> aliveT = new List<string>();
-    public InformationSync infosyncref;
+    // public List<string> playersCT = new List<string>();
+    // public List<string> aliveCT = new List<string>();
+    // public List<string> playersT = new List<string>();
+    // public List<string> aliveT = new List<string>();
+    // public InformationSync infosyncref;
     public void Start(){
         view = GetComponent<PhotonView>();
-        infosyncref = GetComponent<InformationSync>();
-        playersCT = infosyncref.getplayersCT();
-        playersT = infosyncref.getplayersT();
-        aliveCT = infosyncref.getaliveCT();
-        aliveT = infosyncref.getaliveT();
+        // infosyncref = GetComponent<InformationSync>();
+        // playersCT = infosyncref.getplayersCT();
+        // playersT = infosyncref.getplayersT();
+        // aliveCT = infosyncref.getaliveCT();
+        // aliveT = infosyncref.getaliveT();
     }
     private void OnEnable()
     {
@@ -75,10 +75,32 @@ public class RoundLogic : MonoBehaviour
             string name = data[0].ToString();
             bool team = (bool)data[1];
 
-            playersCT = infosyncref.getplayersCT();
-            playersT = infosyncref.getplayersT();
-            aliveCT = infosyncref.getaliveCT();
-            aliveT = infosyncref.getaliveT();
+            int aliveCT = 0;
+            int aliveT = 0;
+            foreach(Player temp in PhotonNetwork.PlayerList){
+                bool propteam = (bool)temp.CustomProperties["Team"];
+                bool propalive = (bool)temp.CustomProperties["Alive"];
+                Debug.Log(temp.CustomProperties["Name"] + " " + propteam + propalive);
+
+                if(propalive == true && propteam == true){
+                    aliveCT++;
+                }
+                if(propalive == true && propteam == false){
+                    aliveT++;
+                }
+            }
+
+            if(aliveCT == 0){
+                RoundStart();
+            }
+            if(aliveT == 0){
+                RoundStart();
+            }
+
+            // playersCT = infosyncref.getplayersCT();
+            // playersT = infosyncref.getplayersT();
+            // aliveCT = infosyncref.getaliveCT();
+            // aliveT = infosyncref.getaliveT();
 
             // if(team == false)
             //     aliveT.Add(false);
@@ -88,15 +110,14 @@ public class RoundLogic : MonoBehaviour
             // checking if all players on one team are dead
             // if they are RoundStart event is called
             // if(PhotonNetwork.IsMasterClient == true){ // this if statement is redundant since only master has RoundLogic(i think??)
-                if(playersCT.Count == aliveCT.Count){
-                    Debug.Log(playersCT.Count + " " + aliveCT.Count);
-                    RoundStart();
-                }
-                if(playersT.Count == aliveT.Count){
-                    Debug.Log(playersT.Count + " " + aliveT.Count);
-                    RoundStart();
-                // }
-            }
+            // if(playersCT.Count == aliveCT.Count){
+            //     // Debug.Log(playersCT.Count + " " + aliveCT.Count);
+            //     RoundStart();
+            // }
+            // if(playersT.Count == aliveT.Count){
+            //     // Debug.Log(playersT.Count + " " + aliveT.Count);
+            //     RoundStart();
+            // }
         }
     }
 
@@ -105,8 +126,8 @@ public class RoundLogic : MonoBehaviour
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; // ReceiverGroup.Others excludes clients (use All to include client)
         PhotonNetwork.RaiseEvent(3, content, raiseEventOptions, SendOptions.SendReliable);
 
-        aliveCT.Clear();
-        aliveT.Clear();
+        // aliveCT.Clear();
+        // aliveT.Clear();
     }
 
     public void settingthedesriednameoftheplayer(string newName, string oldName){

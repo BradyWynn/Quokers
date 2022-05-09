@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using ExitGames.Client.Photon;
+using Photon.Realtime;
 
 public class CharacterControllerr : MonoBehaviour
 {
@@ -23,10 +25,21 @@ public class CharacterControllerr : MonoBehaviour
     public float MAX_ACCEL;
     public float MAX_AIR_SPEED;
     public float MAX_AIR_ACCEL;
+    public bool active = true;
     PhotonView view;
     // public GameObject menu;
     // public GameObject speed;
     public bool isGrounded, isWalled;
+    private void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += OnDeathRecieve;
+        PhotonNetwork.NetworkingClient.EventReceived += OnRoundStartRecieve;
+    }
+    private void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= OnDeathRecieve;
+        PhotonNetwork.NetworkingClient.EventReceived -= OnRoundStartRecieve;
+    }
     private void Start(){
         view = GetComponent<PhotonView>();
         // if(view.IsMine == false){
@@ -40,7 +53,7 @@ public class CharacterControllerr : MonoBehaviour
         Cursor.visible = false;
     }
     void Update(){   
-        if(view.IsMine){  
+        if(view.IsMine && active == true){  
             // debug
             Debug.DrawRay(transform.position, vel * 5, Color.green);
             Debug.DrawRay(transform.position, wishdir * 5, Color.blue);
@@ -133,5 +146,29 @@ public class CharacterControllerr : MonoBehaviour
         float addspeed = MAX_AIR_SPEED - currentspeed;
         addspeed = Mathf.Max(Mathf.Min(addspeed, MAX_AIR_ACCEL * Time.deltaTime * 166), 0); // maybe make an MAX_AIR_ACCEl variable independent of other
         return vel + addspeed * wishdir;
+    }
+    private void OnDeathRecieve(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        if (eventCode == 2){ // <= don't delete
+            // processing obj list
+            object[] data = (object[])photonEvent.CustomData;
+            string recievedname = data[0].ToString();
+
+            GameObject recievedgameObject = GameObject.Find(recievedname);
+            string recievedparentname = recievedgameObject.transform.root.gameObject.name;
+            string parentname = transform.root.gameObject.name;
+
+            if(parentname == recievedparentname){
+                active = false;
+            }
+        }
+    }
+    private void OnRoundStartRecieve(EventData photonEvent){
+        // sending out event
+        byte eventCode = photonEvent.Code;
+        if (eventCode == 3){ // <= don't delete
+            active = true;
+        }
     }
 }
