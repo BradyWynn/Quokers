@@ -872,7 +872,6 @@ GameObject:
   - component: {fileID: 1859694655770435059}
   - component: {fileID: 1859694655770435058}
   - component: {fileID: 1859694655770435042}
-  - component: {fileID: 5769014492327609355}
   - component: {fileID: 1859694655770435068}
   - component: {fileID: 5243359595665236792}
   - component: {fileID: 814247456375443329}
@@ -970,33 +969,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5769014492327609355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1859694655770435071}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23a75ac7b07704140865bfd3e087c37d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  view: {fileID: 1626389060166696524}
-  GameManager: {fileID: 0}
-  infosyncref: {fileID: 0}
-  movementscript: {fileID: 0}
-  spectatormove: {fileID: 0}
-  weaponscript: {fileID: 0}
-  camera: {fileID: 2959915168080152499}
-  mayoichild: {fileID: 5754953544004236419}
-  mesh: {fileID: 0}
-  health: 100
-  UI: {fileID: 1421835078353948070}
-  side: 0
-  alive: 0
-  ctskin: {fileID: 2100000, guid: 9c86576bc41d8ac419f8ed513e0c3531, type: 2}
-  tskin: {fileID: 2100000, guid: e4b660acda5f9324e9f3ea9d29ba406e, type: 2}
 --- !u!114 &1859694655770435068
 MonoBehaviour:
   m_ObjectHideFlags: 0
