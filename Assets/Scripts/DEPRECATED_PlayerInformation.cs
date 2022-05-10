@@ -7,6 +7,7 @@ using Photon.Realtime;
 
 public class DEPRECATED_PlayerInformation : MonoBehaviour
 {
+    // <<THIS IS LEGACY CODE NOT USED IN THE CURRENT BUILD>>
     public PhotonView view;
     public GameObject GameManager;
     public InformationSync infosyncref;

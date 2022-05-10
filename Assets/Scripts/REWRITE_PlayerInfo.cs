@@ -5,7 +5,6 @@ using Photon.Pun;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable; // this prevents unity from getting confused at there being two hashtable datatypes
-
 public class REWRITE_PlayerInfo : MonoBehaviour
 {
     public PhotonView view;
@@ -17,17 +16,15 @@ public class REWRITE_PlayerInfo : MonoBehaviour
     public bool alive;
     public bool alreadyRan;
     public Material ctskin, tskin;
-    private void OnEnable()
-    {
+    private void OnEnable(){
         PhotonNetwork.NetworkingClient.EventReceived += OnJoinedRecieve;
         PhotonNetwork.NetworkingClient.EventReceived += OnRoundStartRecieve;
     }
-    private void OnDisable()
-    {
+    private void OnDisable(){
         PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve;
         PhotonNetwork.NetworkingClient.EventReceived -= OnRoundStartRecieve;
     }
-    private void Start() {
+    private void Start(){
         view = GetComponent<PhotonView>();
         health = 100; // required to prevent dying upon spawning for some reason
         alive = true;
@@ -49,21 +46,7 @@ public class REWRITE_PlayerInfo : MonoBehaviour
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash); // THIS IS REQUIRED!!!!!!
 
             OnDeathSend();
-            // view.RPC("componentsync", RpcTarget.All);
-            // charactercontrol.enabled = false;
         }
-        // if(view.IsMine){
-        //     foreach (Player temp in PhotonNetwork.PlayerList){
-        //         // Debug.Log((string)temp.CustomProperties["Name"]);    
-        //         // Debug.Log(temp);
-        //         if(player.IsLocal){
-        //             Debug.Log("this player is local" + temp + player);
-        //         } 
-        //         else{
-        //             Debug.Log("this player is not local" + temp + player);
-        //         }
-        //     }
-        // }
     }
     private void OnJoinedRecieve(EventData photonEvent) // method that only runs once when this local player joins the game
     {
@@ -77,6 +60,7 @@ public class REWRITE_PlayerInfo : MonoBehaviour
             team = (bool)data[2];
             name = name + recievedview;
             
+            // assigning custom properties to hash table
             PhotonNetwork.LocalPlayer.NickName = name;
             hash.Add("Name", name);
             hash.Add("Team", team);
@@ -84,7 +68,8 @@ public class REWRITE_PlayerInfo : MonoBehaviour
             hash.Add("Alive", alive);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash); // propegates changes to hash table to all clients
 
-            view.RPC("UpdateNames", RpcTarget.AllBuffered, name);
+            // syncs names and skins across all clients
+            view.RPC("UpdateNames", RpcTarget.AllBuffered, name); // note that these calls are Buffered meaning the server will remember that they were called and give them to new clients who join
             view.RPC("UpdateSkins", RpcTarget.AllBuffered, team);
 
             // ExitGames.Client.Photon.Hashtable nameProperty = new ExitGames.Client.Photon.Hashtable() {{"Name", name}}; // this is alternative way of doing what the using statement above does while preserving the defualt hashtable datatype
@@ -102,18 +87,19 @@ public class REWRITE_PlayerInfo : MonoBehaviour
 
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 
-            if(team == true)
-                transform.position = new Vector3(-1.2f, 8.3f, -39.9f); // change to delete/instaniate player instead of teleport
-                // Debug.Log("-1.2f, 8.3f, -39.9f");
-            if(team == false)
-                transform.position = new Vector3(21.2f, 8.3f, 37.6f); // change to delete/instaniate player instead of teleport
-                // Debug.Log("21.2f, 8.3f, 37.6f");
+            if(team == true){
+                transform.position = new Vector3(-1.2f, 8.3f, -39.9f); // teleporting better than deleting and reinstantiating(citation needed)
+            }
+            if(team == false){
+                transform.position = new Vector3(21.2f, 8.3f, 37.6f);
+            }
         }
     }
     [PunRPC]
     private void Damage(int damage){
         if(health > 0 && view.IsMine){
             health = health - damage;
+
             hash["Health"] = health;
             PhotonNetwork.LocalPlayer.CustomProperties["Health"] = health; // this is more efficient than assigning to local hash then updating the entire table because it only updates the health value
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
@@ -128,10 +114,12 @@ public class REWRITE_PlayerInfo : MonoBehaviour
 
     [PunRPC]
     private void UpdateSkins(bool team){
+        // code to find the player mesh and renderer
         GameObject capsulegameobject = transform.GetChild(1).gameObject;
         Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
         Debug.Log(Objectrenderer);
         
+        // updates material according to team
         if (team == true){
             Objectrenderer.material = ctskin;
         }
@@ -141,17 +129,15 @@ public class REWRITE_PlayerInfo : MonoBehaviour
     }
     [PunRPC]
     private void UpdateNames(string name){
-        transform.parent.name = name;
+        transform.parent.name = name; // tranform.root.name should also work here and might be better practice(?)
+
+        hash["Name"] = name;
+        PhotonNetwork.LocalPlayer.CustomProperties["Name"] = name;
+
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
     }
 
     // good resources
     //https://forum.photonengine.com/discussion/9937/example-for-custom-properties
     //https://doc-api.photonengine.com/en/pun/v2/class_photon_1_1_realtime_1_1_player.html
-
-    // not sure how to deal with local hashtable and variable syncing???
-    // local hashtable and varialbes should always be synced
-    // but should you assign values directly to the hashtable and then update the variable from the hashtalbe
-    // or assign directly to variable and then update hashtable?
-    // or you could go without the variable completely and everytime you want to use health access it from the hashtable
-    // however this is probably not a good idea for performance reasons (hashtable look up is O(n) vs just accesing a variable)
 }

@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Photon.Pun;
+using ExitGames.Client.Photon;
+using Photon.Realtime;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -109,10 +111,16 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    // public void setName(){
-    //     if(view.IsMine){
-    //         name = nameInput.text;
-    //         master.settingthedesriednameoftheplayer(name, transform.parent.parent.parent.name);
-    //     }
-    // }
+    public void setName(){
+        if(view.IsMine){
+            name = nameInput.text;
+            string currentname = (string)PhotonNetwork.LocalPlayer.CustomProperties["Name"];
+            GameObject temp = GameObject.Find(currentname);
+            GameObject temp2 = temp.transform.GetChild(0).gameObject;
+            PhotonView view2 = temp2.GetComponent<PhotonView>();
+            Debug.Log(view2 + " " + temp2);
+
+            view2.RPC("UpdateNames", RpcTarget.AllBuffered, name);
+        }
+    }
 }
