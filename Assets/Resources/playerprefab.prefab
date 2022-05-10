@@ -1025,6 +1025,9 @@ MonoBehaviour:
   team: 0
   health: 0
   alive: 0
+  alreadyRan: 0
+  ctskin: {fileID: 2100000, guid: 9c86576bc41d8ac419f8ed513e0c3531, type: 2}
+  tskin: {fileID: 2100000, guid: e4b660acda5f9324e9f3ea9d29ba406e, type: 2}
 --- !u!114 &814247456375443329
 MonoBehaviour:
   m_ObjectHideFlags: 0

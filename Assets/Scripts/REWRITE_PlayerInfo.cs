@@ -15,6 +15,8 @@ public class REWRITE_PlayerInfo : MonoBehaviour
     public bool team; // false is t side, true is ct
     public int health;
     public bool alive;
+    public bool alreadyRan;
+    public Material ctskin, tskin;
     private void OnEnable()
     {
         PhotonNetwork.NetworkingClient.EventReceived += OnJoinedRecieve;
@@ -27,10 +29,9 @@ public class REWRITE_PlayerInfo : MonoBehaviour
     }
     private void Start() {
         view = GetComponent<PhotonView>();
-        // player = PhotonNetwork.LocalPlayer.Get(PhotonNetwork.CurrentRoom.PlayerCount);
-        // mesh = mayoichild.GetComponent<MeshRenderer>();
         health = 100; // required to prevent dying upon spawning for some reason
         alive = true;
+        alreadyRan = false;
         if(!view.IsMine){ // deletes all UI not on local client
             Destroy(UI);
         }
@@ -67,7 +68,7 @@ public class REWRITE_PlayerInfo : MonoBehaviour
     private void OnJoinedRecieve(EventData photonEvent) // method that only runs once when this local player joins the game
     {
         byte eventCode = photonEvent.Code;
-        if (eventCode == 1 && view.IsMine) // <= don't delete 
+        if (eventCode == 1 && view.IsMine && alreadyRan == false) // <= don't delete 
         {
             // unpacking event data
             object[] data = (object[])photonEvent.CustomData;
@@ -83,8 +84,12 @@ public class REWRITE_PlayerInfo : MonoBehaviour
             hash.Add("Alive", alive);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash); // propegates changes to hash table to all clients
 
+            view.RPC("UpdateNames", RpcTarget.AllBuffered, name);
+            view.RPC("UpdateSkins", RpcTarget.AllBuffered, team);
+
             // ExitGames.Client.Photon.Hashtable nameProperty = new ExitGames.Client.Photon.Hashtable() {{"Name", name}}; // this is alternative way of doing what the using statement above does while preserving the defualt hashtable datatype
-            PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve; // removes us from the OnJoinedRecieve event so if someone else joins we don't run this code again
+            // PhotonNetwork.NetworkingClient.EventReceived -= OnJoinedRecieve; // removes us from the OnJoinedRecieve event so if someone else joins we don't run this code again
+            alreadyRan = true;
         }
     }
     private void OnRoundStartRecieve(EventData photonEvent){
@@ -94,6 +99,8 @@ public class REWRITE_PlayerInfo : MonoBehaviour
             alive = true;
             hash["Alive"] = alive;
             PhotonNetwork.LocalPlayer.CustomProperties["Alive"] = alive;
+
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 
             if(team == true)
                 transform.position = new Vector3(-1.2f, 8.3f, -39.9f); // change to delete/instaniate player instead of teleport
@@ -109,6 +116,7 @@ public class REWRITE_PlayerInfo : MonoBehaviour
             health = health - damage;
             hash["Health"] = health;
             PhotonNetwork.LocalPlayer.CustomProperties["Health"] = health; // this is more efficient than assigning to local hash then updating the entire table because it only updates the health value
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
     }
     private void OnDeathSend(){
@@ -117,15 +125,29 @@ public class REWRITE_PlayerInfo : MonoBehaviour
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; // You would have to set the Receivers to All in order to receive this event on the local client as well
         PhotonNetwork.RaiseEvent(2, content, raiseEventOptions, SendOptions.SendReliable);
     }
-    // [PunRPC]
-    // private void componentsync(){
-    //     movementscript.enabled = false; 
-    //     spectatormove.enabled = true;
-    //     mesh.enabled = false;
-    //     weaponscript.enabled = false;
-    // }
 
-    // good resource https://forum.photonengine.com/discussion/9937/example-for-custom-properties
+    [PunRPC]
+    private void UpdateSkins(bool team){
+        GameObject capsulegameobject = transform.GetChild(1).gameObject;
+        Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
+        Debug.Log(Objectrenderer);
+        
+        if (team == true){
+            Objectrenderer.material = ctskin;
+        }
+        if(team == false){
+            Objectrenderer.material = tskin;
+        }
+    }
+    [PunRPC]
+    private void UpdateNames(string name){
+        transform.parent.name = name;
+    }
+
+    // good resources
+    //https://forum.photonengine.com/discussion/9937/example-for-custom-properties
+    //https://doc-api.photonengine.com/en/pun/v2/class_photon_1_1_realtime_1_1_player.html
+
     // not sure how to deal with local hashtable and variable syncing???
     // local hashtable and varialbes should always be synced
     // but should you assign values directly to the hashtable and then update the variable from the hashtalbe

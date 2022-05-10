@@ -5,7 +5,7 @@ using Photon.Pun;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 
-public class PlayerInformation : MonoBehaviour
+public class DEPRECATED_PlayerInformation : MonoBehaviour
 {
     public PhotonView view;
     public GameObject GameManager;
