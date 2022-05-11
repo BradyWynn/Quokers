@@ -4,7 +4,8 @@ using UnityEngine;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using Photon.Pun;
-public class InformationSync : MonoBehaviour {
+public class DEPRECATED_InformationSync : MonoBehaviour {
+    // <<THIS IS LEGACY CODE NOT USED IN THE CURRENT BUILD>>
     public List<string> playersCT = new List<string>();
     public List<string> aliveCT = new List<string>();
     public List<string> playersT = new List<string>();

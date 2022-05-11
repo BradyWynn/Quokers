@@ -2102,7 +2102,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 966857475694725911}
-  - component: {fileID: 3965354274978865607}
   - component: {fileID: 7443264203208612132}
   - component: {fileID: 4068809593564234782}
   m_Layer: 0
@@ -6954,22 +6953,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3965354274978865607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 966857475694725912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b5bc72cd6779204bbd451ab3bf3a0cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playersCT: []
-  aliveCT: []
-  playersT: []
-  aliveT: []
 --- !u!1 &3984337628235461879
 GameObject:
   m_ObjectHideFlags: 0

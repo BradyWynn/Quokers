@@ -10,7 +10,7 @@ public class DEPRECATED_PlayerInformation : MonoBehaviour
     // <<THIS IS LEGACY CODE NOT USED IN THE CURRENT BUILD>>
     public PhotonView view;
     public GameObject GameManager;
-    public InformationSync infosyncref;
+    // public InformationSync infosyncref;
     public CharacterControllerr movementscript;
     // public CharacterController charactercontrol;
     public SpectatorController spectatormove;
@@ -43,7 +43,7 @@ public class DEPRECATED_PlayerInformation : MonoBehaviour
         mesh = mayoichild.GetComponent<MeshRenderer>();
         weaponscript = camera.GetComponent<DebugWeapon>();
         GameManager = GameObject.Find("GameManager");
-        infosyncref = GameManager.GetComponent<InformationSync>();
+        // infosyncref = GameManager.GetComponent<InformationSync>();
         // deleting shit so UI works
         if(!view.IsMine){
             Destroy(UI);
@@ -153,30 +153,30 @@ public class DEPRECATED_PlayerInformation : MonoBehaviour
         }
     }
     public void skinsynclocal(){
-        List<string> playersCT = infosyncref.getplayersCT();
+        // List<string> playersCT = infosyncref.getplayersCT();
         // Debug.Log(playersCT[1]);
-        List<string> playersT = infosyncref.getplayersT();
+        // List<string> playersT = infosyncref.getplayersT();
         // Debug.Log(playersT[1]);
 
 
-        foreach(var player in playersCT){
-            string name = (string)player;
-            GameObject playerobject = GameObject.Find(name);
-            // GameObject capsulegameobject = playerobject.transform.transform.Find("GameObject");
-            GameObject capsulegameobject = playerobject.transform.GetChild(0).GetChild(1).gameObject;
-            // Debug.Log(capsulegameobject);
-            Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
-            Objectrenderer.material = ctskin;
-        }
-        foreach(var player in playersT){
-            string name = (string)player;
-            GameObject playerobject = GameObject.Find(name);
-            // GameObject capsulegameobject = playerobject.transform.transform.Find("GameObject").gameObject;
-            GameObject capsulegameobject = playerobject.transform.GetChild(0).GetChild(1).gameObject;
-            // Debug.Log(capsulegameobject);
-            Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
-            Objectrenderer.material = tskin;
-        } // pretty sure this code is working but needs more testing
+        // foreach(var player in playersCT){
+        //     string name = (string)player;
+        //     GameObject playerobject = GameObject.Find(name);
+        //     // GameObject capsulegameobject = playerobject.transform.transform.Find("GameObject");
+        //     GameObject capsulegameobject = playerobject.transform.GetChild(0).GetChild(1).gameObject;
+        //     // Debug.Log(capsulegameobject);
+        //     Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
+        //     Objectrenderer.material = ctskin;
+        // }
+        // foreach(var player in playersT){
+        //     string name = (string)player;
+        //     GameObject playerobject = GameObject.Find(name);
+        //     // GameObject capsulegameobject = playerobject.transform.transform.Find("GameObject").gameObject;
+        //     GameObject capsulegameobject = playerobject.transform.GetChild(0).GetChild(1).gameObject;
+        //     // Debug.Log(capsulegameobject);
+        //     Renderer Objectrenderer = capsulegameobject.GetComponent<Renderer>();
+        //     Objectrenderer.material = tskin;
+        // } // pretty sure this code is working but needs more testing
     } // one problem is that names are not synced across clients and so if it looks for the master client on another client then
     // it will not find it and then throw an error and the skin will not be updated
 

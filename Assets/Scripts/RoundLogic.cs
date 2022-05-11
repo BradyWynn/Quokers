@@ -45,17 +45,17 @@ public class RoundLogic : MonoBehaviour
             }
             // checks if there are any teams with 0 people alive and if there are then that means its time to start the next round
             if(aliveCT == 0){
-                RoundStart();
+                RoundStart(false);
             }
             if(aliveT == 0){
-                RoundStart();
+                RoundStart(true);
             }
         }
     }
 
-    private void RoundStart(){
+    private void RoundStart(bool team){
         // sending out event
-        object[] content = new object[] {}; // even though theres no data to send still have to do this
+        object[] content = new object[] { team }; // even though theres no data to send still have to do this
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; // ReceiverGroup.Others excludes clients (use All to include client)
         PhotonNetwork.RaiseEvent(3, content, raiseEventOptions, SendOptions.SendReliable);
     }

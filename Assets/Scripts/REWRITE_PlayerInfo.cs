@@ -10,6 +10,7 @@ public class REWRITE_PlayerInfo : MonoBehaviour
     public PhotonView view;
     public GameObject UI;
     public Hashtable hash = new Hashtable();
+    public GameObject GameManager;
     public string name;
     public bool team; // false is t side, true is ct
     public int health;
@@ -26,6 +27,15 @@ public class REWRITE_PlayerInfo : MonoBehaviour
     }
     private void Start(){
         view = GetComponent<PhotonView>();
+        GameManager = GameObject.Find("GameManager");
+        // if(PhotonNetwork.IsMasterClient == true)
+        // {
+        //     gameObject.AddComponent<RoundLogic>();
+        // }
+        if(PhotonNetwork.IsMasterClient == true && view.IsMine){
+            GameManager.AddComponent<RoundLogic>();
+            GameManager.AddComponent<RoomManager>();
+        }
         health = 100; // required to prevent dying upon spawning for some reason
         alive = true;
         alreadyRan = false;

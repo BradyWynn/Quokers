@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 966857475809382493}
-  - component: {fileID: -5258017761995867507}
   - component: {fileID: 7443264203325620846}
   - component: {fileID: 4068809593682304852}
   m_Layer: 0
@@ -29,26 +28,11 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.5771763, y: 0.39620394, z: 3.5452595}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-5258017761995867507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 966857475809382482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b5bc72cd6779204bbd451ab3bf3a0cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playersCT: []
-  aliveCT: 
-  playersT: []
-  aliveT: 
 --- !u!114 &7443264203325620846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,9 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ctPrefab: {fileID: 1859694656338115957, guid: f3ecb4493b26807449f7253809581d46, type: 3}
-  roundlogicPrefab: {fileID: 966857475809382482}
   view: {fileID: 0}
-  MoveUnitsToTargetPositionEventCode: 1
 --- !u!114 &4068809593682304852
 MonoBehaviour:
   m_ObjectHideFlags: 0
