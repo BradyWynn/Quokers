@@ -115,12 +115,14 @@ public class PauseMenu : MonoBehaviour
         if(view.IsMine){
             name = nameInput.text;
             string currentname = (string)PhotonNetwork.LocalPlayer.CustomProperties["Name"];
+            Debug.Log(PhotonNetwork.LocalPlayer);
             GameObject temp = GameObject.Find(currentname);
             GameObject temp2 = temp.transform.GetChild(0).gameObject;
             PhotonView view2 = temp2.GetComponent<PhotonView>();
-            Debug.Log(view2 + " " + temp2);
+            // Debug.Log(view2 + " and this " + currentname);
+            // Debug.Log(view);
 
-            view2.RPC("UpdateNames", RpcTarget.AllBuffered, name);
+            view2.RPC("UpdateNames", RpcTarget.AllBuffered, name, temp.name, PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
 }

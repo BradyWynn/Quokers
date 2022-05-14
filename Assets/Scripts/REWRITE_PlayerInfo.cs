@@ -79,7 +79,7 @@ public class REWRITE_PlayerInfo : MonoBehaviour
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash); // propegates changes to hash table to all clients
 
             // syncs names and skins across all clients
-            view.RPC("UpdateNames", RpcTarget.AllBuffered, name); // note that these calls are Buffered meaning the server will remember that they were called and give them to new clients who join
+            view.RPC("UpdateNames", RpcTarget.AllBuffered, name, transform.parent.name, PhotonNetwork.LocalPlayer.ActorNumber); // note that these calls are Buffered meaning the server will remember that they were called and give them to new clients who join
             view.RPC("UpdateSkins", RpcTarget.AllBuffered, team);
 
             // ExitGames.Client.Photon.Hashtable nameProperty = new ExitGames.Client.Photon.Hashtable() {{"Name", name}}; // this is alternative way of doing what the using statement above does while preserving the defualt hashtable datatype
@@ -138,16 +138,35 @@ public class REWRITE_PlayerInfo : MonoBehaviour
         }
     }
     [PunRPC]
-    private void UpdateNames(string name){
-        transform.parent.name = name; // tranform.root.name should also work here and might be better practice(?)
+    private void UpdateNames(string newname, string oldname, int PlayerID){ // this is not working correctly
+        Debug.Log(oldname);
+        Debug.Log(transform.parent.name);
+        Debug.Log(newname);
+        // Player plref = PhotonNetwork.LocalPlayer.Get(PlayerID); // using playerID basically prevents this from being two methods
+        if(transform.parent.name == oldname){
+            transform.parent.name = newname;
+        }
+        if(view.IsMine){ // starting to think what this actually does is check if this client is the original creator of this view(?)
+            transform.parent.name = newname;  
+            hash["Name"] = newname;
+            PhotonNetwork.LocalPlayer.CustomProperties["Name"] = newname;
 
-        hash["Name"] = name;
-        PhotonNetwork.LocalPlayer.CustomProperties["Name"] = name;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash); 
+        }
+        // goref.name = newname; // tranform.root.name should also work here and might be better practice(?)
+        // transform.parent.name = newname;
+        
 
-        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        // if(plref.Equals(PhotonNetwork.LocalPlayer) && view.IsMine){
+        //     hash["Name"] = newname;
+        //     plref.CustomProperties["Name"] = newname;
+
+        //     plref.SetCustomProperties(hash);
+        // }
     }
 
     // good resources
     //https://forum.photonengine.com/discussion/9937/example-for-custom-properties
     //https://doc-api.photonengine.com/en/pun/v2/class_photon_1_1_realtime_1_1_player.html
+    // master client runs the update name however it doesn't update on the joined client.
 }
