@@ -51,6 +51,8 @@ MonoBehaviour:
   - UpdateNames
   - UpdateSkins
   - testingsomething
+  - PickupGun
+  - ThrowGun
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

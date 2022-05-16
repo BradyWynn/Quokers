@@ -13,6 +13,14 @@ public class CameraControl : MonoBehaviour
     public GameObject speed;
 
     public GameObject collider;
+    private void OnEnable()
+    {
+        FindObjectOfType<PauseMenu>().SensChangeEvent += SensChange;
+    }
+    private void OnDisable()
+    {
+        FindObjectOfType<PauseMenu>().SensChangeEvent -= SensChange;
+    }
     private void Start() {
         view = GetComponent<PhotonView>();
         if(!view.IsMine){
@@ -32,5 +40,8 @@ public class CameraControl : MonoBehaviour
             transform.rotation = Quaternion.Euler(-mouseY, mouseX, 0f);
             transform.position = collider.transform.position + new Vector3(0, .833f ,0.135f);
         }
+    }
+    public void SensChange(float newsens){
+        sens = newsens;
     }
 }

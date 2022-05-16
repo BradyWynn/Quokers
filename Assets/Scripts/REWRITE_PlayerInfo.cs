@@ -5,8 +5,7 @@ using Photon.Pun;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable; // this prevents unity from getting confused at there being two hashtable datatypes
-public class REWRITE_PlayerInfo : MonoBehaviour
-{
+public class REWRITE_PlayerInfo : MonoBehaviour{
     public PhotonView view;
     public GameObject UI;
     public Hashtable hash = new Hashtable();

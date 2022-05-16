@@ -5,6 +5,7 @@ using Photon.Pun;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using UnityEngine.UI;
+using System;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class PauseMenu : MonoBehaviour
     public float jumpforcee;
     public string name;
     PhotonView view;
+    public event Action <float> SensChangeEvent;
     public void Start(){
         view = GetComponent<PhotonView>();
     }
@@ -73,7 +75,8 @@ public class PauseMenu : MonoBehaviour
     public void sensitivity(){
         if(view.IsMine){ 
             sens = float.Parse(sensInput.text); // float.Parse converts from String to float
-            camera.sens = sens;
+            // camera.sens = sens;
+            SensChangeEvent(sens);
         }
     }
 
