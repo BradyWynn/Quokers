@@ -10,12 +10,13 @@ public class REWRITE_PlayerInfo : MonoBehaviour{
     public GameObject UI;
     public Hashtable hash = new Hashtable();
     public GameObject GameManager;
-    public string name;
+    public string playername;
     public bool team; // false is t side, true is ct
     public int health;
     public bool alive;
     public bool alreadyRan;
     public Material ctskin, tskin;
+    public MeshRenderer playermeshrenderer;
     private void OnEnable(){
         PhotonNetwork.NetworkingClient.EventReceived += OnJoinedRecieve;
         PhotonNetwork.NetworkingClient.EventReceived += OnRoundStartRecieve;
@@ -27,6 +28,7 @@ public class REWRITE_PlayerInfo : MonoBehaviour{
     private void Start(){
         view = GetComponent<PhotonView>();
         GameManager = GameObject.Find("GameManager");
+        playermeshrenderer = transform.GetChild(1).GetComponent<MeshRenderer>();
         // if(PhotonNetwork.IsMasterClient == true)
         // {
         //     gameObject.AddComponent<RoundLogic>();
@@ -64,21 +66,21 @@ public class REWRITE_PlayerInfo : MonoBehaviour{
         {
             // unpacking event data
             object[] data = (object[])photonEvent.CustomData;
-            name = (string)data[0];
+            playername = (string)data[0];
             int recievedview = (int)data[1];
             team = (bool)data[2];
-            name = name + recievedview;
+            playername = playername + recievedview;
             
             // assigning custom properties to hash table
-            PhotonNetwork.LocalPlayer.NickName = name;
-            hash.Add("Name", name);
+            PhotonNetwork.LocalPlayer.NickName = playername;
+            hash.Add("Name", playername);
             hash.Add("Team", team);
             hash.Add("Health", health);
             hash.Add("Alive", alive);
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash); // propegates changes to hash table to all clients
 
             // syncs names and skins across all clients
-            view.RPC("UpdateNames", RpcTarget.AllBuffered, name, transform.parent.name, PhotonNetwork.LocalPlayer.ActorNumber); // note that these calls are Buffered meaning the server will remember that they were called and give them to new clients who join
+            view.RPC("UpdateNames", RpcTarget.AllBuffered, playername, transform.parent.name, PhotonNetwork.LocalPlayer.ActorNumber); // note that these calls are Buffered meaning the server will remember that they were called and give them to new clients who join
             view.RPC("UpdateSkins", RpcTarget.AllBuffered, team);
 
             // ExitGames.Client.Photon.Hashtable nameProperty = new ExitGames.Client.Photon.Hashtable() {{"Name", name}}; // this is alternative way of doing what the using statement above does while preserving the defualt hashtable datatype
@@ -95,6 +97,8 @@ public class REWRITE_PlayerInfo : MonoBehaviour{
             PhotonNetwork.LocalPlayer.CustomProperties["Alive"] = alive;
 
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
+            playermeshrenderer.enabled = true;
 
             if(team == true){
                 transform.position = new Vector3(-1.2f, 8.3f, -39.9f); // teleporting better than deleting and reinstantiating(citation needed)
@@ -115,8 +119,9 @@ public class REWRITE_PlayerInfo : MonoBehaviour{
         }
     }
     private void OnDeathSend(){
+        view.RPC("DeathManager", RpcTarget.AllBuffered, view.ViewID);
         // sending out event
-        object[] content = new object[] { name, team}; // Array contains the target position and the IDs of the selected units
+        object[] content = new object[] { PhotonNetwork.LocalPlayer.CustomProperties["Name"], team}; // Array contains the target position and the IDs of the selected units
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All }; // You would have to set the Receivers to All in order to receive this event on the local client as well
         PhotonNetwork.RaiseEvent(2, content, raiseEventOptions, SendOptions.SendReliable);
     }
@@ -146,9 +151,10 @@ public class REWRITE_PlayerInfo : MonoBehaviour{
             transform.parent.name = newname;
         }
         if(view.IsMine){ // starting to think what this actually does is check if this client is the original creator of this view(?)
-            transform.parent.name = newname;  
+            // transform.parent.name = newname;  
             hash["Name"] = newname;
             PhotonNetwork.LocalPlayer.CustomProperties["Name"] = newname;
+            PhotonNetwork.LocalPlayer.NickName = newname;
 
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash); 
         }
@@ -164,8 +170,22 @@ public class REWRITE_PlayerInfo : MonoBehaviour{
         // }
     }
 
+    [PunRPC]
+    private void DeathManager(int recieveview)
+    {
+        PhotonView currentview = GetComponent<PhotonView>();
+        if(recieveview == currentview.ViewID){
+            playermeshrenderer.enabled = false;
+        }
+    }
+
     // good resources
     //https://forum.photonengine.com/discussion/9937/example-for-custom-properties
     //https://doc-api.photonengine.com/en/pun/v2/class_photon_1_1_realtime_1_1_player.html
     // master client runs the update name however it doesn't update on the joined client.
+
+    // known bugs
+    // when you shoot a weapon the player dies
+    // when there are three players if you kill someone you sometimes die instead of them
+    // leaderboard sometimes updates incorrectly
 }

@@ -15,7 +15,7 @@ public class DEPRECATED_PlayerInformation : MonoBehaviour
     // public CharacterController charactercontrol;
     public SpectatorController spectatormove;
     public DebugWeapon weaponscript;
-    public GameObject camera;
+    public GameObject playercamera;
     public GameObject mayoichild;
     public MeshRenderer mesh;
     public int health = 100;
@@ -41,7 +41,7 @@ public class DEPRECATED_PlayerInformation : MonoBehaviour
         movementscript = GetComponent<CharacterControllerr>();
         spectatormove = GetComponent<SpectatorController>();
         mesh = mayoichild.GetComponent<MeshRenderer>();
-        weaponscript = camera.GetComponent<DebugWeapon>();
+        weaponscript = playercamera.GetComponent<DebugWeapon>();
         GameManager = GameObject.Find("GameManager");
         // infosyncref = GameManager.GetComponent<InformationSync>();
         // deleting shit so UI works

@@ -8,7 +8,7 @@ using Photon.Realtime;
 public class SpectatorController : MonoBehaviour
 {
     public float MAX_AIR_SPEED = 1;
-    public GameObject camera;
+    public GameObject playercamera;
     public Vector3 wishdir;
     public Vector3 vel = Vector3.zero;
     public CharacterController controller;
@@ -47,7 +47,7 @@ public class SpectatorController : MonoBehaviour
             // move
             wishdir = (z + x).normalized; // wishdir is unit vector
 
-            transform.rotation = Quaternion.Euler(new Vector3(transform.eulerAngles.x, camera.transform.eulerAngles.y, transform.eulerAngles.z));
+            transform.rotation = Quaternion.Euler(new Vector3(transform.eulerAngles.x, playercamera.transform.eulerAngles.y, transform.eulerAngles.z));
             transform.position = transform.position + (wishdir/2);
 
         }

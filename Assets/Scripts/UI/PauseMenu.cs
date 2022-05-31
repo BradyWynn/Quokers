@@ -15,7 +15,7 @@ public class PauseMenu : MonoBehaviour
     // player to change it and affect all players
     
     public static bool paused = false;
-    public CameraControl camera;
+    // public CameraControl playercamera;
     public CharacterControllerr move;
     public RoundLogic master;
     public GameObject pauseUI;
@@ -32,7 +32,7 @@ public class PauseMenu : MonoBehaviour
     public float groundfriccc;
     public float airfricccccc;
     public float jumpforcee;
-    public string name;
+    public string playername;
     PhotonView view;
     public event Action <float> SensChangeEvent;
     public void Start(){
@@ -116,7 +116,7 @@ public class PauseMenu : MonoBehaviour
 
     public void setName(){
         if(view.IsMine){
-            name = nameInput.text;
+            playername = nameInput.text;
             string currentname = (string)PhotonNetwork.LocalPlayer.CustomProperties["Name"];
             Debug.Log(PhotonNetwork.LocalPlayer);
             GameObject temp = GameObject.Find(currentname);
@@ -125,7 +125,7 @@ public class PauseMenu : MonoBehaviour
             // Debug.Log(view2 + " and this " + currentname);
             // Debug.Log(view);
 
-            view2.RPC("UpdateNames", RpcTarget.AllBuffered, name, temp.name, PhotonNetwork.LocalPlayer.ActorNumber);
+            view2.RPC("UpdateNames", RpcTarget.AllBuffered, playername, temp.name, PhotonNetwork.LocalPlayer.ActorNumber);
         }
     }
 }

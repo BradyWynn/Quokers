@@ -798,7 +798,7 @@ MonoBehaviour:
   jumpHeight: 1
   groundDistance: 0.4
   controller: {fileID: 1859694655770435042}
-  camera: {fileID: 2959915168080152499}
+  playercamera: {fileID: 2959915168080152499}
   groundCheck: {fileID: 1943281819871895858}
   groundMask:
     serializedVersion: 2
@@ -834,13 +834,14 @@ MonoBehaviour:
   view: {fileID: 0}
   UI: {fileID: 1421835078353948070}
   GameManager: {fileID: 0}
-  name: 
+  playername: 
   team: 0
   health: 0
   alive: 0
   alreadyRan: 0
   ctskin: {fileID: 2100000, guid: 9c86576bc41d8ac419f8ed513e0c3531, type: 2}
   tskin: {fileID: 2100000, guid: e4b660acda5f9324e9f3ea9d29ba406e, type: 2}
+  playermeshrenderer: {fileID: 0}
 --- !u!114 &814247456375443329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -854,7 +855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MAX_AIR_SPEED: 2
-  camera: {fileID: 2959915168080152499}
+  playercamera: {fileID: 2959915168080152499}
   wishdir: {x: 0, y: 0, z: 0}
   vel: {x: 0, y: 0, z: 0}
   controller: {fileID: 1859694655770435042}
@@ -1150,7 +1151,8 @@ MonoBehaviour:
   inBetweenShots: 0
   fireDistance: 0
   filtermesh: {fileID: 0}
-  camera: {fileID: 5611413495573179836}
+  playercamera: {fileID: 5611413495573179836}
+  currentcamera: {fileID: 0}
   localsens: 0
 --- !u!33 &6617883853787659028
 MeshFilter:
@@ -2157,7 +2159,7 @@ MonoBehaviour:
   sens: 3
   menu: {fileID: 6133544109169036319}
   speed: {fileID: 1832248687854683628}
-  collider: {fileID: 1859694655770435071}
+  playercollider: {fileID: 1859694655770435071}
 --- !u!81 &6077293212266671704
 AudioListener:
   m_ObjectHideFlags: 0
@@ -4101,7 +4103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa31ea7e51097214bbc358633beb6f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 5611413495573179836}
   move: {fileID: 1859694655770435068}
   master: {fileID: 472785842024739421, guid: aa1bb44a64640a84d8812108b32fc8ec, type: 3}
   pauseUI: {fileID: 4823168469133217614}
@@ -4118,7 +4119,7 @@ MonoBehaviour:
   groundfriccc: 0
   airfricccccc: 0
   jumpforcee: 0
-  name: 
+  playername: 
 --- !u!114 &1338066139023563846
 MonoBehaviour:
   m_ObjectHideFlags: 0

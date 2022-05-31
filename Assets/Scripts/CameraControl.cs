@@ -12,7 +12,7 @@ public class CameraControl : MonoBehaviour
     public GameObject menu;
     public GameObject speed;
 
-    public GameObject collider;
+    public GameObject playercollider;
     private void OnEnable()
     {
         FindObjectOfType<PauseMenu>().SensChangeEvent += SensChange;
@@ -38,7 +38,7 @@ public class CameraControl : MonoBehaviour
             mouseY = Mathf.Clamp(mouseY, -90f, 90f);  
 
             transform.rotation = Quaternion.Euler(-mouseY, mouseX, 0f);
-            transform.position = collider.transform.position + new Vector3(0, .833f ,0.135f);
+            transform.position = playercollider.transform.position + new Vector3(0, .833f ,0.135f);
         }
     }
     public void SensChange(float newsens){

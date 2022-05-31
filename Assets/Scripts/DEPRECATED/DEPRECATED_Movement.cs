@@ -10,7 +10,7 @@ public class DEPRECATED_Movement : MonoBehaviour
     public Vector3 accelerationY;
     public Vector3 wishdir;
     public float gravity = 0.005f;
-    public GameObject camera;
+    public GameObject playercamera;
     public bool isgrounded;
     public Vector3 accelerationZ;
     public float speed = .4f;
@@ -73,7 +73,7 @@ public class DEPRECATED_Movement : MonoBehaviour
             Debug.Log(vel.magnitude); // speed
 
             //position/rotation updates
-            transform.rotation = Quaternion.Euler(new Vector3(transform.eulerAngles.x, camera.transform.eulerAngles.y, transform.eulerAngles.z));
+            transform.rotation = Quaternion.Euler(new Vector3(transform.eulerAngles.x, playercamera.transform.eulerAngles.y, transform.eulerAngles.z));
             // transform.position = transform.position + (vel * 5) + accelerationY;
             transform.position = transform.position + vel + accelerationY;
         }

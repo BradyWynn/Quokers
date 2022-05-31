@@ -19,7 +19,8 @@ public class Interact : MonoBehaviour
     public float inBetweenShots = 0;
     public int fireDistance;
     public MeshFilter filtermesh;
-    public CameraControl camera;
+    public CameraControl playercamera;
+    public Camera currentcamera;
     public float localsens;
     public RaycastHit hit;
     private void OnEnable()
@@ -47,60 +48,87 @@ public class Interact : MonoBehaviour
             LineRenderer.SetPosition(0, new Vector3(0, 0, 0));
             LineRenderer.SetPosition(1, new Vector3(0, 0, 0));
         }
-        localsens = camera.sens;
+        localsens = playercamera.sens;
+        // if(Camera.current != null){
+        //     currentcamera = Camera.current;
+        // }
     }
     void Update(){
-        // int layerMask = 7;
+        // setting current camera in start just returns null cause its too early so need to do this in Update but pretty sure theres a better way to do this
+        if(currentcamera == null){
+            currentcamera = Camera.current;
+        }
+
+        // checking player inputs and running methods accordingly
         if(view.IsMine && active == true){  // this code is begging for a state machine, should probably do that
-            if(Input.GetKeyDown(KeyCode.E) && Gun != null){
-                view.RPC("ThrowGun", RpcTarget.All, view.ViewID);
-            }
             if(Input.GetMouseButton(0) && Gun == null && Physics.Raycast(transform.parent.position, transform.TransformDirection(Vector3.forward), out hit, 100, gunMask)){
                 view.RPC("PickupGun", RpcTarget.All, view.ViewID, hit.transform.name);
             }
-            if(Input.GetMouseButton(0) && inBetweenShots > (1 + (60/Gun.fireRate)) && Gun.isAutomatic == true && Gun != null){
-                fire();
-            }
-            if (Input.GetMouseButtonDown(0) && inBetweenShots > (1 + (60/Gun.fireRate)) && Gun.isAutomatic == false && Gun != null){
-                fire();
-            }
-            if(inBetweenShots < (1 + (60/Gun.fireRate)) && Gun != null){
-                inBetweenShots = inBetweenShots + (10 * Time.deltaTime);
-            }
-            if(Gun.isSniper == true && Gun != null){ // checking this every frame doesn't really makes sense for sure a better way to do this
-                if(Input.GetMouseButton(1)){
-                Camera.current.fieldOfView = 25;
-                camera.sens = localsens * .25f;
+            if(Gun != null){
+                if(Input.GetKeyDown(KeyCode.E) && Gun != null){
+                view.RPC("ThrowGun", RpcTarget.All, view.ViewID); // ThrowGun can be run then Gun becomes null and checks below throw an error
                 }
-                else{
-                Camera.current.fieldOfView = 100;
-                camera.sens = localsens;
+                if(Input.GetMouseButton(0) && inBetweenShots > (1 + (60/Gun.fireRate)) && Gun.isAutomatic == true && Gun != null){
+                fire();
+                }
+                if (Input.GetMouseButtonDown(0) && inBetweenShots > (1 + (60/Gun.fireRate)) && Gun.isAutomatic == false && Gun != null){
+                    fire();
+                }
+                if(Input.GetMouseButton(0) && inBetweenShots > (1 + (60/Gun.fireRate)) && Gun.isAutomatic == true){
+                fire();
+                }
+                if (Input.GetMouseButtonDown(0) && inBetweenShots > (1 + (60/Gun.fireRate)) && Gun.isAutomatic == false){
+                    fire();
+                }
+                if(inBetweenShots < (1 + (60/Gun.fireRate))){
+                    inBetweenShots = inBetweenShots + (10 * Time.deltaTime);
+                }
+                if(Gun.isSniper == true){ // checking this every frame doesn't really makes sense for sure a better way to do this
+                    if(Input.GetMouseButton(1)){
+                    currentcamera.fieldOfView = 25;
+                    playercamera.sens = localsens * .25f;
+                    }
+                    else{
+                    currentcamera.fieldOfView = 100;
+                    playercamera.sens = localsens;
+                    }
                 }
             }
         }
     }
     void fire(){
-        RaycastHit hit;
+        if(view.IsMine){
+            RaycastHit hit;
         // rn raycast goes through walls, need check
-        // also infinite distance is expensive to call so limit distance
         if (Physics.Raycast(transform.parent.position, transform.TransformDirection(Vector3.forward), out hit, Gun.fireDistance, hitMask))
         {
             Debug.DrawRay(transform.parent.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             // Debug.Log(hit.transform.name);
 
+            // all of this code is exceedingly bad
+            // ensures that you can't kill yourself 
+            // alternatively i could just turn off your own player model which would be alot cleaner and smarter
             PhotonView pv = hit.transform.GetComponent<PhotonView>();
-            pv.RPC("Damage", RpcTarget.All, Gun.damage);
+            PhotonView pvparentparent = hit.transform.parent.GetComponent<PhotonView>();
+            GameObject parenttransform = transform.root.gameObject;
+            PhotonView pvparent = parenttransform.GetComponent<PhotonView>();
+            if(pvparentparent.ViewID != pvparent.ViewID){
+                pv.RPC("Damage", RpcTarget.All, Gun.damage);
+                Debug.Log(pvparentparent.ViewID);
+                Debug.Log(pvparent.ViewID);
+            }
         }
 
         LineRenderer.SetPosition(0, transform.parent.position);
         LineRenderer.SetPosition(1, transform.parent.position + transform.forward * (20));
         inBetweenShots = 0;
+        }
     }
     public void SensChange(float sens){
         localsens = sens;
     }
     [PunRPC]
-    private void ThrowGun(int recieveview){
+    private void ThrowGun(int recieveview){ // this method and the one below not being buffered means that there can be some desync when a new player joins theres a weapon dropped but I don't think buffering them is good practice either(?)
         PhotonView currentview = GetComponent<PhotonView>();
         if(currentview.ViewID == recieveview){
             MeshFilter localfiltermesh = GetComponent<MeshFilter>();

@@ -12,7 +12,7 @@ public class CharacterControllerr : MonoBehaviour
     public float jumpHeight = 3f;
     public float groundDistance = 0.4f;
     public CharacterController controller;
-    public GameObject camera;
+    public GameObject playercamera;
     public Transform groundCheck;
     public LayerMask groundMask, wallMask;
     public Vector3 velocity;
@@ -114,7 +114,7 @@ public class CharacterControllerr : MonoBehaviour
                 vel = airAccelerate(vel, wishdir);
 
 
-            transform.rotation = Quaternion.Euler(new Vector3(transform.eulerAngles.x, camera.transform.eulerAngles.y, transform.eulerAngles.z));
+            transform.rotation = Quaternion.Euler(new Vector3(transform.eulerAngles.x, playercamera.transform.eulerAngles.y, transform.eulerAngles.z));
             // transform.Rotate(new Vector3(0, camera.transform.y, 0)); // maybe use this instead of above 
                                                                      // because using built in functions is better than rewriting the rotation
             // if(vel.magnitude >= .2f) // speed cap (not really needed because map prevents certain speeds)
